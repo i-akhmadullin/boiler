@@ -43,7 +43,7 @@ module.exports = (grunt) ->
           'blocks/**/*.styl',
           'blocks/**/*.less'
         ]
-        tasks: ['styletto:dev', 'styletto:dev_ie', 'reload']
+        tasks: ['stylus:dev', 'stylus:dev_ie', 'reload']
 
       reload:
         files: [
@@ -73,64 +73,58 @@ module.exports = (grunt) ->
           ext:    '.html'    # Dest filepaths will have this extension.
         }]
 
-    styletto:
+    stylus:
+      # options:
+      #   import: [
+      #     'blocks/config.styl',
+      #     # 'blocks/i-mixins/i-mixins__clearfix.styl',
+      #     # 'blocks/i-mixins/i-mixins__vendor.styl',
+      #     # 'blocks/i-mixins/i-mixins__gradients.styl',
+      #     # 'blocks/i-mixins/i-mixins__if-ie.styl'
+      #   ]
+
       dev:
-        src: [
-          'lib/normalize-css/normalize.css',
-          'blocks/i-reset/i-reset.styl',
-          'lib/**/*.css',
-          'blocks/b-*/**/*.css',
-          'blocks/b-*/**/*.styl',
-          'blocks/b-*/**/*.less'
-        ]
+        # options:
+        #   define: {
+        #     ie: false
+        #   },
+        files: {
+          'lib/normalize-css/normalize.css'
+          'blocks/i-reset/i-reset.styl'
+          # 'lib/**/*.css'
+          # 'blocks/b-*/**/*.css'
+          # 'blocks/b-*/**/*.styl'
+          # 'blocks/b-*/**/*.less'
+        }
         dest: 'publish/style.css'
-        errors: 'alert'
-        stylus:
-          imports: [
-            'blocks/config.styl',
-            'blocks/i-mixins/i-mixins__clearfix.styl',
-            'blocks/i-mixins/i-mixins__vendor.styl',
-            'blocks/i-mixins/i-mixins__gradients.styl',
-            'blocks/i-mixins/i-mixins__if-ie.styl'
-          ]
 
       dev_ie:
-        src: [
-          'blocks/i-reset/i-reset.styl',
-          'lib/**/*.css',
-          'blocks/b-*/**/*.ie.css',
-          'blocks/b-*/**/*.ie.styl',
-          'blocks/b-*/**/*.ie.less'
-        ]
+        options:
+          define: {
+            ie: true
+          }
+        files: {
+          'blocks/i-reset/i-reset.styl'
+          'lib/**/*.css'
+          # 'blocks/b-*/**/*.ie.css'
+          # 'blocks/b-*/**/*.ie.styl'
+          # 'blocks/b-*/**/*.ie.less'
+        }
         dest: 'publish/style.ie.css'
-        errors: 'alert'
-        stylus:
-          variables: { 'ie': true }
-          imports: [
-            'blocks/config.styl',
-            'blocks/i-mixins/i-mixins__clearfix.styl',
-            'blocks/i-mixins/i-mixins__if-ie.styl'
-          ]
 
-      publish:
-        src:  '<config:styletto.dev.dest>'
-        dest: '<config:styletto.dev.dest>'
-        compress: true
-        base64:   true
-        errors:   'error'
+      # publish:
+      #   options:
+      #     compress: true
+      #   files:  '<%= stylus.dev.dest %>'
+      #   dest:   '<%= stylus.dev.dest %>'
+      #   # base64: true
 
-      publish_ie:
-        src:  '<config:styletto.dev_ie.dest>'
-        dest: '<config:styletto.dev_ie.dest>'
-        compress: true
-        base64:   true
-        errors:   'error'
-
-
-    server:
-      # uncommment to set custom port
-      # port: 3502,
-      base: process.cwd()
+      # publish_ie:
+      #   options:
+      #     compress: true
+      #   files:  '<%= stylus.dev_ie.dest %>'
+      #   dest:   '<%= stylus.dev_ie.dest %>'
+      #   # base64: true
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -139,6 +133,6 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-jade');
   grunt.loadNpmTasks('grunt-contrib-stylus');
 
-  @registerTask( 'default',  [ 'concat', 'jade' ])
-  @registerTask( 'reloader', [ 'concat', 'jade', 'server' ])
-  @registerTask( 'publish',  [ 'concat', 'uglify', 'jade' ])
+  @registerTask( 'default',  [ 'concat', 'stylus:dev', 'stylus:dev_ie', 'jade' ])
+  @registerTask( 'reloader', [ 'concat', 'stylus:dev', 'stylus:dev_ie', 'jade', 'server' ])
+  # @registerTask( 'publish',  [ 'concat', 'uglify', 'stylus', 'jade' ])
