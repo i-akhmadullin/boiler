@@ -1,0 +1,19 @@
+{
+  "name": "boilerplate",
+  "version": "0.0.1",
+  "description": "Grunt 0.4 boilerplate with normalize, stylus, jade, with BEM-style blocks",
+  "repository": "",
+  "author": "",
+  "license": "MIT",
+  "readmeFilename": "readme.md",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-jshint": "~0.1.1",
+    "grunt-contrib-concat": "~0.1",
+    "grunt-contrib-watch": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-stylus": "*",
+    "grunt-contrib-livereload": "0.1.2",
+    "grunt-contrib-jade": "~0.5"
+  }
+}
