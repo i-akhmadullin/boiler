@@ -21,16 +21,21 @@ module.exports = (grunt) ->
 
     jshint:
       files: [
-        'Gruntfile.coffee',
-        'lib/**/*.js',
+        # 'lib/**/*.js',
         'blocks/**/*.js'
       ]
       options:
+        curly:    true
+        eqeqeq:   true
+        eqnull:   true
+        quotmark: true
+        undef:    true
+        unused:   true
+
+        browser:  true
+        jquery:   true
         globals:
-          jQuery:   true
           console:  true
-          module:   true
-          document: true
 
     watch:
       scripts:
@@ -74,57 +79,57 @@ module.exports = (grunt) ->
         }]
 
     stylus:
-      # options:
-      #   import: [
-      #     'blocks/config.styl',
-      #     # 'blocks/i-mixins/i-mixins__clearfix.styl',
-      #     # 'blocks/i-mixins/i-mixins__vendor.styl',
-      #     # 'blocks/i-mixins/i-mixins__gradients.styl',
-      #     # 'blocks/i-mixins/i-mixins__if-ie.styl'
-      #   ]
+      options:
+        compress: false
+        paths: ['blocks/']
+        import: [
+          'config',
+          'i-mixins/i-mixins__clearfix.styl',
+          'i-mixins/i-mixins__vendor.styl',
+          'i-mixins/i-mixins__gradients.styl',
+          'i-mixins/i-mixins__if-ie.styl'
+        ]
 
-      dev:
-        # options:
-        #   define: {
-        #     ie: false
-        #   },
-        files: {
-          'lib/normalize-css/normalize.css'
-          'blocks/i-reset/i-reset.styl'
-          # 'lib/**/*.css'
-          # 'blocks/b-*/**/*.css'
-          # 'blocks/b-*/**/*.styl'
-          # 'blocks/b-*/**/*.less'
-        }
-        dest: 'publish/style.css'
+      devs:
+        options:
+          define:
+            ie: false
+        files:
+          'publish/style.css': [
+            'lib/normalize-css/normalize.css',
+            'blocks/i-reset/i-reset.styl',
+            'lib/**/*.css',
+            'blocks/b-*/**/*.css',
+            'blocks/b-*/**/*.styl',
+            'blocks/b-*/**/*.less'
+          ]
 
       dev_ie:
         options:
-          define: {
+          define:
             ie: true
-          }
-        files: {
-          'blocks/i-reset/i-reset.styl'
-          'lib/**/*.css'
-          # 'blocks/b-*/**/*.ie.css'
-          # 'blocks/b-*/**/*.ie.styl'
-          # 'blocks/b-*/**/*.ie.less'
-        }
-        dest: 'publish/style.ie.css'
+        files:
+          'publish/style.ie.css': [
+            'blocks/i-reset/i-reset.styl',
+            'lib/**/*.css',
+            'blocks/b-*/**/*.ie.css',
+            'blocks/b-*/**/*.ie.styl',
+            'blocks/b-*/**/*.ie.less'
+          ]
 
-      # publish:
-      #   options:
-      #     compress: true
-      #   files:  '<%= stylus.dev.dest %>'
-      #   dest:   '<%= stylus.dev.dest %>'
-      #   # base64: true
+      publish:
+        options:
+          compress: true
+        files: 
+          'publish/style.css': 'publish/style.css'
+        # base64: true
 
-      # publish_ie:
-      #   options:
-      #     compress: true
-      #   files:  '<%= stylus.dev_ie.dest %>'
-      #   dest:   '<%= stylus.dev_ie.dest %>'
-      #   # base64: true
+      publish_ie:
+        options:
+          compress: true
+        files: 
+          'publish/style.ie.css': 'publish/style.ie.css'
+        # base64: true
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -133,6 +138,6 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-jade');
   grunt.loadNpmTasks('grunt-contrib-stylus');
 
-  @registerTask( 'default',  [ 'concat', 'stylus:dev', 'stylus:dev_ie', 'jade' ])
-  @registerTask( 'reloader', [ 'concat', 'stylus:dev', 'stylus:dev_ie', 'jade', 'server' ])
-  # @registerTask( 'publish',  [ 'concat', 'uglify', 'stylus', 'jade' ])
+  @registerTask( 'default',  [ 'jshint', 'concat', 'stylus:devs', 'stylus:dev_ie', 'jade' ])
+  @registerTask( 'reloader', [ 'jshint', 'concat', 'stylus:dev', 'stylus:dev_ie', 'jade', 'server' ])
+  @registerTask( 'publish',  [ 'jshint', 'concat', 'uglify', 'stylus', 'jade' ])
