@@ -1,7 +1,19 @@
 module.exports = (grunt) ->
   'use strict'
 
+  require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
+
   @initConfig
+
+    bower:
+      install:
+        options:
+          targetDir:      './lib'
+          layout:         'byType'
+          install:        true
+          verbose:        false
+          cleanTargetDir: false
+          cleanBowerDir:  true
 
     concat:
       options:
@@ -9,7 +21,9 @@ module.exports = (grunt) ->
       dist:
         src: [
           'lib/consoleshiv.js',
-          'lib/**/!(jquery.min|html5shiv|consoleshiv).js',
+          'lib/**/*.js',
+          '!lib/jquery/*.js',
+          '!lib/html5shiv/*.js',
           'blocks/**/*.js'
         ]
         dest: 'publish/script.js'
@@ -21,7 +35,10 @@ module.exports = (grunt) ->
 
     jshint:
       files: [
-        # 'lib/**/*.js',
+        'lib/consoleshiv.js',
+        'lib/**/*.js',
+        '!lib/jquery/*.js',
+        '!lib/html5shiv/*.js',
         'blocks/**/*.js'
       ]
       options:
@@ -35,12 +52,20 @@ module.exports = (grunt) ->
         browser:  true
         jquery:   true
         globals:
-          console:  true
+          console: true
 
     watch:
+      options:
+        interrupt:  true
+        nospawn:    true
+        livereload: true
+
       scripts:
-        files: ['<%= jshint.files %>']
-        tasks: ['concat', 'reload']
+        files: [
+          'lib/**/*.js',
+          'blocks/**/*.js'
+        ]
+        tasks: ['concat']
 
       css:
         files: [
@@ -48,28 +73,24 @@ module.exports = (grunt) ->
           'blocks/**/*.styl',
           'blocks/**/*.less'
         ]
-        tasks: ['stylus:dev', 'stylus:dev_ie', 'reload']
-
-      reload:
-        files: [
-          '*.html'
-        ]
-        tasks: ['reload']
+        tasks: ['stylus:dev', 'stylus:dev_ie']
 
       jade:
         files: [
           'jade/**/*.jade'
         ]
-        tasks: ['jade', 'reload']
+        tasks: ['jade:develop']
 
     jade:
-      compile:
+      options:
+        pretty:  true
+
+      develop:
         options:
-          pretty:  true
           data:
             ga:      'UA-XXXXX-X'
             metrika: 'XXXXXXX'
-
+            isDevelopment: true
         files: [{
           expand: true       # Enable dynamic expansion.
           cwd:    'jade'     # Src matches are relative to this path.
@@ -77,6 +98,14 @@ module.exports = (grunt) ->
           dest:   ''         # Destination path prefix.
           ext:    '.html'    # Dest filepaths will have this extension.
         }]
+
+      publish:
+        options:
+          data:
+            ga:      '<%= jade.develop.options.data.ga %>'
+            metrika: '<%= jade.develop.options.data.metrika %>'
+            isDevelopment: false
+        files: '<%= jade.develop.files %>'
 
     stylus:
       options:
@@ -90,7 +119,7 @@ module.exports = (grunt) ->
           'i-mixins/i-mixins__if-ie.styl'
         ]
 
-      devs:
+      dev:
         options:
           define:
             ie: false
@@ -101,7 +130,8 @@ module.exports = (grunt) ->
             'lib/**/*.css',
             'blocks/b-*/**/*.css',
             'blocks/b-*/**/*.styl',
-            'blocks/b-*/**/*.less'
+            'blocks/b-*/**/*.less',
+            '!blocks/i-*/'
           ]
 
       dev_ie:
@@ -114,7 +144,8 @@ module.exports = (grunt) ->
             'lib/**/*.css',
             'blocks/b-*/**/*.ie.css',
             'blocks/b-*/**/*.ie.styl',
-            'blocks/b-*/**/*.ie.less'
+            'blocks/b-*/**/*.ie.less',
+            '!blocks/i-*/'
           ]
 
       publish:
@@ -131,13 +162,12 @@ module.exports = (grunt) ->
           'publish/style.ie.css': 'publish/style.ie.css'
         # base64: true
 
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-jade');
-  grunt.loadNpmTasks('grunt-contrib-stylus');
+    open:
+      mainpage:
+        path: require('path').join(__dirname, 'main.html');
 
-  @registerTask( 'default',  [ 'jshint', 'concat', 'stylus:devs', 'stylus:dev_ie', 'jade' ])
-  @registerTask( 'reloader', [ 'jshint', 'concat', 'stylus:dev', 'stylus:dev_ie', 'jade', 'server' ])
-  @registerTask( 'publish',  [ 'jshint', 'concat', 'uglify', 'stylus', 'jade' ])
+
+  @registerTask( 'default',    [ 'jshint', 'concat', 'stylus:dev', 'stylus:dev_ie', 'jade:develop' ])
+  @registerTask( 'livereload', [ 'default', 'open', 'watch' ])
+
+  @registerTask( 'publish',    [ 'jshint', 'concat', 'uglify', 'stylus', 'jade:publish' ])

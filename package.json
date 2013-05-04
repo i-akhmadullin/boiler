@@ -1,7 +1,7 @@
 {
   "name": "boilerplate",
-  "version": "0.0.1",
-  "description": "Grunt 0.4 boilerplate with normalize, stylus, jade, with BEM-style blocks",
+  "version": "0.0.2",
+  "description": "Grunt 0.4 boilerplate with normalize, stylus, jade, BEM-style blocks",
   "repository": "",
   "author": "",
   "license": "MIT",
@@ -10,10 +10,12 @@
     "grunt": "~0.4.1",
     "grunt-contrib-jshint": "~0.1.1",
     "grunt-contrib-concat": "~0.1.1",
-    "grunt-contrib-watch": "*",
+    "grunt-contrib-watch":  "~0.4.0.",
     "grunt-contrib-uglify": "*",
     "grunt-contrib-stylus": "~0.5",
-    "grunt-contrib-livereload": "~0.1.2",
-    "grunt-contrib-jade": "~0.5"
+    "grunt-contrib-jade":   "~0.5",
+    "grunt-open":           "~0.2.0",
+    "grunt-bower-task":     "~0.2.2",
+    "matchdep":             "~0.1.2"
   }
 }
