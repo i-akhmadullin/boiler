@@ -1,1 +1,0 @@
-Folder for storing temporary conten — such as images for news
