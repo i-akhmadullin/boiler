@@ -1,3 +1,11 @@
+### 0.0.3 (5 May 2013)
+
+* Add connect server, open on start http://localhost:8000/main.html
+* Сopy images from /blocks to /publish 
+* Сompress images in /publish and /tmp with grunt-contrib-imagemin
+* Sprite imgs(with _sprite postfix) from /blocks to /publish/sprite.png with grunt-spritesmith
+* Go crazy (done)
+
 ### 0.0.2 (5 May 2013)
 
 * Add livereload (grunt-contrib-watch 0.4.0)

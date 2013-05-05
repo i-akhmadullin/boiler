@@ -5,6 +5,60 @@ module.exports = (grunt) ->
 
   @initConfig
 
+    sprite:
+      all:
+        src:       ['blocks/**/*_sprite.png']     # Sprite files to read in
+        destImg:   'publish/sprite.png'           # Location to output spritesheet
+        destCSS:   'blocks/sprite_positions.styl' # Stylus with variables under sprite names
+        # imgPath:   'sprite.png' # OPTIONAL: Manual override for imgPath specified in CSS
+        algorithm: 'top-down'   # top-down, left-right, diagonal, alt-diagonal, binary-tree [best packing]
+        engine:    'auto'       # OPTIONAL: Specify engine (auto, canvas, gm)
+        cssFormat: 'stylus'     # OPTIONAL: Specify CSS format (inferred from destCSS' extension by default) (stylus, scss, sass, less, json)
+        imgOpts:                # OPTIONAL: Specify img options
+          format: 'png'         # Format of the image (inferred from destImg' extension by default) (jpg, png)
+          # quality: 90         # Quality of image (gm only)
+
+    connect:
+      uses_defaults: {}
+
+    copy:
+      images:
+        files: [{
+          expand:  true
+          flatten: true
+          cwd:     'blocks',
+          src:     ['**/*.{png,jpg,jpeg,gif}', '!**/*_sprite.{png,jpg,jpeg,gif}']
+          dest:    'publish/'
+          filter:  'isFile'
+        }]
+
+    clean:
+      pubimages:
+        src: [
+          "publish/*.png",
+          "publish/*.gif",
+          "publish/*.jpg",
+          "publish/*.jpeg",
+          "!publish/sprite.png"
+        ]
+
+    imagemin:
+      dist:
+        files: [
+          {
+            expand: true
+            cwd:    'publish/'
+            src:    '**/*.{png,jpg,jpeg}'
+            dest:   'publish/'
+          },
+          {
+            expand: true
+            cwd:    'tmp/'
+            src:    '**/*.{png,jpg,jpeg}'
+            dest:   'tmp/'
+          }
+        ]
+
     bower:
       install:
         options:
@@ -116,7 +170,8 @@ module.exports = (grunt) ->
           'i-mixins/i-mixins__clearfix.styl',
           'i-mixins/i-mixins__vendor.styl',
           'i-mixins/i-mixins__gradients.styl',
-          'i-mixins/i-mixins__if-ie.styl'
+          'i-mixins/i-mixins__if-ie.styl',
+          'sprite_positions.styl',
         ]
 
       dev:
@@ -164,10 +219,14 @@ module.exports = (grunt) ->
 
     open:
       mainpage:
-        path: require('path').join(__dirname, 'main.html');
+        # path: require('path').join(__dirname, 'main.html');
+        path: 'http://localhost:8000/main.html';
 
 
-  @registerTask( 'default',    [ 'jshint', 'concat', 'stylus:dev', 'stylus:dev_ie', 'jade:develop' ])
-  @registerTask( 'livereload', [ 'default', 'open', 'watch' ])
+  @registerTask( 'default',     [ 'jshint', 'concat', 'stylus:dev', 'stylus:dev_ie', 'jade:develop' ])
+  @registerTask( 'livereload',  [ 'default', 'connect', 'open', 'watch' ])
 
-  @registerTask( 'publish',    [ 'jshint', 'concat', 'uglify', 'stylus', 'jade:publish' ])
+  @registerTask( 'publish',     [ 'jshint', 'concat', 'uglify', 'stylus', 'jade:publish' ])
+
+  # copy images from /blocks to /publish and then compress them
+  @registerTask( 'publish_img', [ 'clean', 'copy', 'imagemin' ])
