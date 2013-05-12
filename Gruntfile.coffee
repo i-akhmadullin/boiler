@@ -43,6 +43,8 @@ module.exports = (grunt) ->
         ]
 
     imagemin:
+      options:
+        optimizationLevel: 5
       dist:
         files: [
           {
@@ -56,7 +58,13 @@ module.exports = (grunt) ->
             cwd:    'tmp/'
             src:    '**/*.{png,jpg,jpeg}'
             dest:   'tmp/'
-          }
+          },
+          {
+            expand: true
+            cwd:    './'
+            src:    '*.{png,jpg,jpeg,ico}'
+            dest:   './'
+          },
         ]
 
     bower:
@@ -111,17 +119,27 @@ module.exports = (grunt) ->
     watch:
       options:
         interrupt:  true
-        nospawn:    true
-        livereload: true
 
       scripts:
+        options:
+          livereload: false
         files: [
           'lib/**/*.js',
           'blocks/**/*.js'
         ]
-        tasks: ['concat']
+        tasks: ['jshint', 'concat']
+
+      scripts_pub:
+        options:
+          livereload: true
+          nospawn:    true
+        files: [
+          'publish/script.js',
+        ]
 
       css:
+        options:
+          livereload: false
         files: [
           'blocks/**/*.css',
           'blocks/**/*.styl',
@@ -129,7 +147,17 @@ module.exports = (grunt) ->
         ]
         tasks: ['stylus:dev', 'stylus:dev_ie']
 
+      css_pub:
+        options:
+          livereload: true
+          nospawn:    true
+        files: [
+          'publish/style.css',
+        ]
+
       jade:
+        options:
+          livereload: true
         files: [
           'jade/**/*.jade'
         ]

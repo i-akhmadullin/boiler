@@ -1,0 +1,56 @@
+$twitter_sprite_x = 0px;
+$twitter_sprite_y = 64px;
+$twitter_sprite_offset_x = 0px;
+$twitter_sprite_offset_y = -64px;
+$twitter_sprite_width = 32px;
+$twitter_sprite_height = 32px;
+$twitter_sprite = 0px 64px 0px -64px 32px 32px;
+$github_sprite_x = 0px;
+$github_sprite_y = 32px;
+$github_sprite_offset_x = 0px;
+$github_sprite_offset_y = -32px;
+$github_sprite_width = 32px;
+$github_sprite_height = 32px;
+$github_sprite = 0px 32px 0px -32px 32px 32px;
+$facebook_sprite_x = 0px;
+$facebook_sprite_y = 0px;
+$facebook_sprite_offset_x = 0px;
+$facebook_sprite_offset_y = 0px;
+$facebook_sprite_width = 32px;
+$facebook_sprite_height = 32px;
+$facebook_sprite = 0px 0px 0px 0px 32px 32px;
+
+spriteX($sprite) {
+  return $sprite[0];
+}
+
+spriteY($sprite) {
+  return $sprite[1];
+}
+
+spriteOffsetX($sprite) {
+  return $sprite[2];
+}
+
+spriteOffsetY($sprite) {
+  return $sprite[3];
+}
+
+spriteWidth($sprite) {
+  return $sprite[4];
+}
+
+spriteHeight($sprite) {
+  return $sprite[5];
+}
+
+spriteBackground() {
+  return '../publish/sprite.png';
+}
+
+sprite($sprite) {
+  background-image: url(spriteBackground());
+  background-position: spriteOffsetX($sprite) spriteOffsetY($sprite);
+  width: spriteWidth($sprite);
+  height: spriteHeight($sprite);
+}

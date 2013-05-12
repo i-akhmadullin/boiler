@@ -1,3 +1,8 @@
+### 0.0.4 (12 May 2013)
+
+* Compress images in root folder (useful for icons)
+* Use newer contrib-watch with fixed hot reload
+
 ### 0.0.3 (5 May 2013)
 
 * Add connect server, open on start http://localhost:8000/main.html
