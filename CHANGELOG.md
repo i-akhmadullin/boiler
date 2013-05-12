@@ -1,3 +1,7 @@
+### 0.0.5 (12 May 2013)
+
+* Basic config for karma unittests
+
 ### 0.0.4 (12 May 2013)
 
 * Compress images in root folder (useful for icons)
